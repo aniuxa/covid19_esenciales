@@ -3,7 +3,8 @@
  Clasificación de actividades y ocupaciones desarrollado por el Grupo TeTra.
  
  
-Se trató un proceso colegiado
+ 
+Se trató un proceso colegiado con discusiones entre: Nina Castro Méndez
 
 
 ![Proceso](Proceso.png)
