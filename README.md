@@ -4,10 +4,12 @@
  
  
  
-Se trató un proceso colegiado con discusiones entre: Nina Castro Méndez
+Se trató un proceso colegiado con discusiones.
 
 
 ![Proceso](Proceso.png)
 
 
-A partir de estos elementos se obtiene la clasificación
+* A partir de estos elementos se obtiene la clasificación que se puede consultar [aquí](class_14may.xlsx)
+
+* El código para utilizar esta clasificación en la ENOE se encuentra [acá](CÓDIGO_t120.do) 
