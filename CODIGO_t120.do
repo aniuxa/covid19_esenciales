@@ -24,9 +24,6 @@ gl  dta "$root/2020trim1_dta" // carpeta donde está la base de STATA descargada
 gl log "$root/out"  // donde quiero guardar el log - el log guarda la pantalla de resultados
 gl tempdat "$root/out/temp" // donde van los datos temporales que después puedo borrar
 gl cleandat "$root/out/clean" // donde están mis datos limpios - pegados
-gl docs "$root/out/docs2" // donde se guardarán los outputs
-gl gra "$root/out/graphs" // donde se guardarán los gráficos
-gl tabout "/Applications/Stata/ado/personal"  // 
 gl class "$root/out"  // donde esté la clasificación
 
 * -----------------------------------------------------------------------------
