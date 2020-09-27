@@ -35,10 +35,7 @@ gl class "$root/out"  // donde esté la clasificación
 * Paquetería fuera de stata para instalar. DESCOMENTAR LAS LINEAS
 
 *ssc install renvarlab, replace // la nueva versión el comando se llama renvarlab o no renvars como en el código
-*ssc install estout, replace // guarda estimaciones y las exporta 
-*ssc install coefplot, replace // gráficos de estimaciones
 *ssc install blindschemes, replace all // esquemas de los gráficos
-*ssc install grc1leg, replace // combinar gráficos con leyenda común
 
 * -----------------------------------------------------------------------------
 * FUSIONAR LA ENOE TRIMESTRE1 2020
@@ -138,78 +135,6 @@ log close
 
 log using "$log/vars2020.log", replace
 
-
-
-*2013 en adelante
-/*
-1estudiar o tomar cursos de capacitación?(incluye el tiempo dedicado  a  realizar  trabajos escolares)
-2cuidar o atender sin pago, de manera exclusiva  a  niños, ancianos,  enfermos  o discapacitados?  (bañarlos, cambiarlos, )
-3realizar compras, llevar cuentas o realizar trámites para el hogar o encargarse de la seguridad?(como guardar el automóvil)
-4llevar a algún miembro del hogar a la escuela, cita médica u otra actividad?
-5construir o ampliar su vivienda?
-6reparar o dar mantenimiento a su vivienda, muebles, aparatos electrodomésticos o vehículos?
-7realizar los quehaceres de su hogar? (lavar, planchar, preparar y servir alimentos, barrer)
-8prestar  servicios  gratuitos a su comunidad?(conseguir despensas, cuidar personas en un hospital)
-*/
-
-
-
-gen t_estudiar=p11_h1*60+p11_m1 if p11_h1<98
-
-gen t_cuidado=p11_h2*60+p11_m2 if p11_h2<98
-
-gen t_construir=p11_h3*60+p11_m3 if p11_h3<98 & year<2013
-replace t_construir=p11_h5*60+p11_m5 if p11_h5<98 & year>2012
-
-gen t_reparar=p11_h4*60+p11_m4 if p11_h4<98 & year<2013
-replace t_reparar=p11_h6*60+p11_m6 if p11_h6<98 & year>2012
-
-gen t_quehacer=p11_h5*60+p11_m5 if p11_h5<98 & year<2013
-replace t_quehacer=p11_h7*60+p11_m7 if p11_h7<98 & year>2012
-
-gen t_comun=p11_h6*60+p11_m6 if p11_h6<98 & year<2013
-replace t_comun=p11_h8*60+p11_m8 if p11_h8<98 & year>2012
-
-gen t_compras=p11_h4*60+p11_m4 if p11_h4<98 & year>2012
-
-gen t_traslado=p11_h5*60+p11_m5 if p11_h5<98 & year>2012
-
-egen t_total=rowtotal(t_cuidad-t_traslado)
-egen t_total0=rowtotal(t_cuidad-t_comun)
-
-gen t_total_hrs=t_total/60
-
-
-
-foreach var of varlist t_estudiar-t_traslado {
-replace `var'=`var'/60
-replace `var'=0 if `var'==.
-
-}
-
-**** Recode
-
-gen ocup_old=0 if eda>14
-replace ocup_old=1 if p1coe==1 & eda>14 /* ocupados plenos*/
-replace ocup_old=1  if p1a1==1 & eda>14 /*Ocupados sin pago*/
-replace ocup_old=1  if p1a2==2 & eda>14 /*Ocupados sin pago*/
-replace ocup_old=1  if p1c<5 & eda>14  /*Ocupados ausente con nexo laboral*/
-replace ocup_old=1  if p1d==1 & eda>14  /*Ocupados ausente con retorno*/ 
-replace ocup_old=1  if p1d==2 & p1e==1 & eda>14  /*Ocupados ausente con retorno*/
-replace ocup_old=1  if p1d==9 & p1e==1 & eda>14 /*Ocupados ausente con retorno*/
-
-
-gen dsmpleo_old=0 if eda>14
-replace dsmpleo_old=1 if p1c==11 & eda>14 /* Iniciadores*/
-replace dsmpleo_old=1 if p1b==2 & (p2_1==1 | p2_2==2 | p2_3==3) & p2b==1 & (p2c!=2 & p2c!=9) & eda>14 /* Desocupados con bÃÂsqueda*/
-replace dsmpleo_old=1 if p2b==1 & (p2_1==1 | p2_2==2 | p2_3==3) & (p2c!=2 & p2c!=9) & (p1d==2 | p1d==9) & eda>14 /* Ausentes sin ingreso ni nexo laboral*/
-
-gen pea_old=0
-replace pea_old=1 if ocup_old==1
-replace pea_old=2 if dsmpleo_old==1
-gen pet=1 if eda>14
-
-gen pea2=((clase2==1 | pea_old==2) & pea_old!=0) if pet==1
 
 **Codificaciónn variables
 
@@ -473,15 +398,6 @@ tab class_scian1 sinco_riesgo if clase2==1 [fw=fac], row col cell
 
 tab class_scian1 sinco_esencial if clase2==1 [fw=fac], row col cell
 
-gen seq_class_scian=class_scian1 if clase2==1
-replace seq_class=5 if clase2>1
-
-label var seq_class_scian "Actividades esenciales"
-label define seq_class_scian 1 "Esenciales DOF" 2 "Encadenamiento" ///
-3 "Frontera - mixta" 4 "No esenciales" ///
-5 "Fuera", modify
-
-label values seq_class_scian seq_class_scian
 
 save "$cleandat/enoet1_2020_covid.dta", replace
 
